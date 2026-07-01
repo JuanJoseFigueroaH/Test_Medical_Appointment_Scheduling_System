@@ -1,0 +1,10 @@
+logging:
+  level:
+    com.medisalud: DEBUG
+    org.springframework.r2dbc: DEBUG
+
+medisalud:
+  cors:
+    allow-all: true
+  rate-limit:
+    enabled: false

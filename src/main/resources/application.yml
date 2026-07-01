@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: medical-appointment-system
+  
+  r2dbc:
+    url: ${DB_R2DBC_URL:r2dbc:postgresql://localhost:5432/medisalud}
+    username: ${DB_USERNAME:medisalud}
+    password: ${DB_PASSWORD:#{null}}
+  
+  flyway:
+    enabled: true
+    url: ${DB_JDBC_URL:jdbc:postgresql://localhost:5432/medisalud}
+    user: ${DB_USERNAME:medisalud}
+    password: ${DB_PASSWORD:#{null}}
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+server:
+  port: 8080
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  show-actuator: false
+
+logging:
+  level:
+    com.medisalud: INFO
+    org.springframework.r2dbc: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{correlationId:-}] [%thread] %-5level %logger{36} - %msg%n"
+
+medisalud:
+  holidays:
+    api:
+      enabled: true
+      url: https://date.nager.at/api/v3
+      country-code: CO
+      timeout-seconds: 10
+      refresh-cron: "0 0 0 1 1 *"
+    fixed: []
+    specific: []
+  
+  cors:
+    allowed-origins: http://localhost:3000,http://localhost:8080
+    allow-all: false
+  
+  rate-limit:
+    enabled: true
+    requests-per-minute: 60
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when_authorized
+  metrics:
+    tags:
+      application: medisalud
